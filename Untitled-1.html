@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Adivina el Número</title>
+
+  <style>
+    body {
+      margin: 0;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: #1e88e5; /* azul */
+      font-family: Arial, sans-serif;
+    }
+
+    .caja {
+      background: white;
+      padding: 30px;
+      border-radius: 15px;
+      text-align: center;
+      width: 320px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+    }
+
+    input {
+      padding: 10px;
+      width: 80px;
+      font-size: 16px;
+      text-align: center;
+      margin-top: 10px;
+    }
+
+    button {
+      padding: 10px 15px;
+      margin: 8px 5px;
+      cursor: pointer;
+      border: none;
+      border-radius: 8px;
+      background: #1976d2;
+      color: white;
+    }
+
+    button:hover {
+      background: #125aa0;
+    }
+
+    #resultado {
+      margin-top: 15px;
+      font-weight: bold;
+    }
+
+  </style>
+</head>
+
+<body>
+
+  <div class="caja">
+    <h2>🎯 Adivina el número</h2>
+    <p id="mensaje">Tienes 10 intentos</p>
+
+    <input type="number" id="guess" min="1" max="100">
+    <br>
+
+    <button onclick="checkGuess()">Probar</button>
+    <button onclick="resetGame()">Reiniciar</button>
+
+    <p id="resultado"></p>
+    <p id="intentos"></p>
+  </div>
+
+<script>
+  let numeroSecreto = Math.floor(Math.random() * 100) + 1;
+  let intentos = 10;
+  let historial = [];
+
+  function checkGuess() {
+    let valor = Number(document.getElementById("guess").value);
+
+    if (!valor || valor < 1 || valor > 100) {
+      document.getElementById("resultado").textContent = "Ingresa un número válido (1-100)";
+      return;
+    }
+
+    historial.push(valor);
+    intentos--;
+
+    if (valor === numeroSecreto) {
+      document.getElementById("resultado").textContent = "🎉 ¡Correcto!";
+      finJuego();
+    } 
+    else if (intentos === 0) {
+      document.getElementById("resultado").textContent = "❌ Perdiste. Era: " + numeroSecreto;
+      finJuego();
+    } 
+    else {
+      document.getElementById("resultado").textContent =
+        valor < numeroSecreto ? "📉 Te quedaste corto" : "📈 Te pasaste";
+
+      document.getElementById("mensaje").textContent =
+        "Te quedan " + intentos + " intentos";
+    }
+
+    document.getElementById("intentos").textContent =
+      "Intentos: " + historial.join(", ");
+  }
+
+  function finJuego() {
+    document.getElementById("guess").disabled = true;
+  }
+
+  function resetGame() {
+    numeroSecreto = Math.floor(Math.random() * 100) + 1;
+    intentos = 10;
+    historial = [];
+
+    document.getElementById("guess").disabled = false;
+    document.getElementById("guess").value = "";
+
+    document.getElementById("resultado").textContent = "";
+    document.getElementById("intentos").textContent = "";
+    document.getElementById("mensaje").textContent = "Tienes 10 intentos";
+  }
+</script>
+
+</body>
+</html>
